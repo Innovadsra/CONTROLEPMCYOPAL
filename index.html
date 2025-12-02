@@ -249,7 +249,7 @@
                 <h2>Control Datos</h2>
                 <p class="subtitle">Ingreso a Control</p>
                 
-                <input type="text" id="usuario" placeholder="Usuario (EPMCYOPAL)" autocomplete="off" autofocus>
+                <input type="text" id="usuario" placeholder="Usuario (EPMSCYOPAL)" autocomplete="off" autofocus>
                 <input type="password" id="password" placeholder="Contraseña" style="display: none;">
                 
                 <button onclick="verificarCredenciales()">GENERAR CÓDIGO</button>
@@ -305,10 +305,10 @@
     <script>
         const TIEMPO_VISTA_CODIGO = 5;
         // Credencial única permitida (se compara en minúsculas)
-        const USUARIO_PERMITIDO = "epmcyopal"; 
+        const USUARIO_PERMITIDO = "EPMSCYOPAL"; 
 
         // Nueva URL de destino
-        const APPSHEET_URL = "https://script.google.com/macros/s/AKfycbzOc0w_aP2mYumsIyk8IPOTu5esxH28rQq3x3Mop_4pGXGqGNBZcKQHrJCTB78Vzkrr/exec";
+        const APPSHEET_URL = "https://script.google.com/macros/s/AKfycbwP1AWPcCz15BVGq7dOZYv7O8pSPxYTQiRufwxVsTNqFvqMoHf7_hPvkZfBe9MXilkL/exec";
         
         let codigoGenerado = "";
         let usuarioActual = "";
@@ -328,7 +328,7 @@
                 return;
             }
 
-            // Única verificación: el usuario debe ser EPMCYOPAL (sin importar mayúsculas)
+            // Única verificación: el usuario debe ser EPMSCYOPAL (sin importar mayúsculas)
             if (user === USUARIO_PERMITIDO) {
                 usuarioActual = user;
                 mostrarCodigoGenerado();
