@@ -271,7 +271,6 @@
         
         let codigoGenerado = "";
         let intentosRestantes = 3;
-        let codigoValido = true; 
 
         function iniciarFlujoDeCodigo() {
             codigoGenerado = Math.floor(100000 + Math.random() * 900000).toString();
@@ -322,9 +321,8 @@
 
                 if (tiempoRestante <= 0) {
                     clearInterval(intervalo);
-                    codigoValido = false; 
                     timerBarFill.style.background = "#dc3545";
-                    document.querySelector('.timer').innerHTML = '⏱️ **EXPIRADO**. Por favor, digita el código.';
+                    document.querySelector('.timer').innerHTML = '⏱️ **INGRESAR CÓDIGO**';
                     
                     mostrarPasoVerificacion();
                 }
@@ -347,12 +345,6 @@
 
             if (!codigoIngresado || codigoIngresado.length !== 6) {
                 errorCodigo.textContent = "⚠️ Ingresa el código de 6 dígitos";
-                errorCodigo.style.display = "block";
-                return;
-            }
-
-            if (!codigoValido) {
-                errorCodigo.textContent = "❌ El código ha expirado. Recarga la página para generar uno nuevo.";
                 errorCodigo.style.display = "block";
                 return;
             }
