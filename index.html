@@ -226,15 +226,16 @@
                     <div class="code-label">Tu código de acceso es:</div>
                     <div class="code-number" id="codigo-generado">000000</div>
                     <div class="timer">
-                        ⏱️ El código es válido por 5 segundos
+                        ⏱️ Transición automática en <span id="tiempo-restante">05</span>s
+                    </div>
+                    <div class="timer-bar">
+                        <div class="timer-bar-fill" id="timer-bar-fill"></div>
                     </div>
                 </div>
 
                 <div class="info-box">
-                    💡 **Importante:** El código se ha registrado en el sistema. Ingresa el mismo código a continuación para acceder.
+                    💡 **Importante:** El código se ha registrado en el sistema.
                 </div>
-                
-                <button onclick="continuarAVerificacion()">CONTINUAR</button>
             </div>
             
             <div id="step-verify" style="display: none;">
@@ -262,6 +263,7 @@
     </div>
 
     <script>
+        const TIEMPO_VISTA_CODIGO = 5;
         const APPSHEET_URL = "https://script.google.com/macros/s/AKfycbwP1AWPcCz15BVGq7dOZYv7O8pSPxYTQiRufwxVsTNqFvqMoHf7_hPvkZfBe9MXilkL/exec";
         const REGISTRO_URL = "https://script.google.com/macros/s/AKfycbwP1AWPcCz15BVGq7dOZYv7O8pSPxYTQiRufwxVsTNqFvqMoHf7_hPvkZfBe9MXilkL/exec"; 
         
@@ -303,28 +305,33 @@
         }
 
         function iniciarTemporizador() {
-            const TIEMPO_VALIDEZ = 5; 
+            let tiempoRestante = TIEMPO_VISTA_CODIGO;
+            const tiempoDisplay = document.getElementById("tiempo-restante");
             const timerBarFill = document.getElementById("timer-bar-fill");
-            timerBarFill.style.width = "100%";
             
-            let tiempoRestante = TIEMPO_VALIDEZ;
-
+            tiempoDisplay.textContent = tiempoRestante.toString().padStart(2, '0');
+            timerBarFill.style.width = "100%";
+            timerBarFill.style.background = "white";
+            
             const intervalo = setInterval(function() {
                 tiempoRestante--;
                 
-                const porcentaje = (tiempoRestante / TIEMPO_VALIDEZ) * 100;
+                tiempoDisplay.textContent = tiempoRestante.toString().padStart(2, '0');
+                const porcentaje = (tiempoRestante / TIEMPO_VISTA_CODIGO) * 100;
                 timerBarFill.style.width = porcentaje + "%";
 
                 if (tiempoRestante <= 0) {
                     clearInterval(intervalo);
                     codigoValido = false; 
                     timerBarFill.style.background = "#dc3545";
-                    document.querySelector('.timer').innerHTML = '❌ Código **EXPIRADO**. Recarga la página para generar uno nuevo.';
+                    document.querySelector('.timer').innerHTML = '⏱️ **EXPIRADO**. Por favor, digita el código.';
+                    
+                    mostrarPasoVerificacion();
                 }
             }, 1000);
         }
 
-        function continuarAVerificacion() {
+        function mostrarPasoVerificacion() {
             document.getElementById("step-code").style.display = "none";
             document.getElementById("step-verify").style.display = "block";
             document.getElementById("codigo-input").focus();
@@ -389,9 +396,7 @@
 
         document.addEventListener("keypress", function(e) {
             if (e.key === "Enter") {
-                if (document.getElementById("step-code").style.display !== "none") {
-                    continuarAVerificacion();
-                } else if (document.getElementById("step-verify").style.display !== "none") {
+                if (document.getElementById("step-verify").style.display !== "none") {
                     verificarCodigo();
                 }
             }
