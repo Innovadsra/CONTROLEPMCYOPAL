@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Datos Boy</title>
+    <meta name="description" content="App oficial de Control Datos Boy">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        #login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        h2 {
+            margin: 0 0 10px;
+            color: #1e3c72;
+            font-size: 26px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .step-indicator {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+        
+        input[type="text"], 
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 17px;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+        
+        button {
+            background: #28a745;
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .secondary-btn {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+        
+        .secondary-btn:hover {
+            background: #5a6268;
+        }
+        
+        .error {
+            color: #dc3545;
+            margin-top: 15px;
+            display: none;
+            font-weight: bold;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .success {
+            color: #155724;
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .code-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            display: none;
+            animation: pulse 2s infinite;
+        }
+
+        .code-display.visible {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .code-number {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 15px;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        .timer {
+            font-size: 18px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .timer-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .timer-bar-fill {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.3s linear;
+        }
+
+        .code-input {
+            font-size: 32px !important;
+            letter-spacing: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        
+        #app-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+        }
+        
+        #appsheet-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        #step-code {
+            display: none;
+        }
+
+        #step-verify {
+            display: none;
+        }
+        /* Ocultar el campo de contraseña visualmente */
+        #password {
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+    <div id="login-wrapper">
+        <div class="login-box">
+            <div id="step-login">
+                <div class="step-indicator">🔐 Paso 1 de 3</div>
+                <h2>Control Datos Boy</h2>
+                <p class="subtitle">Ingreso a Bodega Rentísticos</p>
+                
+                <input type="text" id="usuario" placeholder="Usuario (EPMCYOPAL)" autocomplete="off" autofocus>
+                <input type="password" id="password" placeholder="Contraseña" style="display: none;">
+                
+                <button onclick="verificarCredenciales()">GENERAR CÓDIGO</button>
+                
+                <p class="error" id="error-msg"></p>
+            </div>
+
+            <div id="step-code">
+                <div class="step-indicator">🎯 Paso 2 de 3</div>
+                <h2>Código de Acceso</h2>
+                <p class="subtitle">Memoriza este código</p>
+                
+                <div class="code-display visible">
+                    <div class="code-label">Tu código de acceso es:</div>
+                    <div class="code-number" id="codigo-generado">000000</div>
+                    <div class="timer">
+                        ⏱️ Tiempo restante: <span id="tiempo-restante">05</span>s
+                    </div>
+                    <div class="timer-bar">
+                        <div class="timer-bar-fill" id="timer-bar-fill"></div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    💡 <strong>Importante:</strong> Memoriza o anota este código. Lo necesitarás en el siguiente paso.
+                </div>
+            </div>
+
+            <div id="step-verify">
+                <div class="step-indicator">✅ Paso 3 de 3</div>
+                <h2>Verificación</h2>
+                <p class="subtitle">Ingresa el código que se mostró</p>
+                
+                <input type="text" id="codigo-input" placeholder="000000" maxlength="6" class="code-input" autocomplete="off">
+                
+                <button onclick="verificarCodigo()">INGRESAR</button>
+                <button class="secondary-btn" onclick="volverLogin()">← Volver al inicio</button>
+                
+                <p class="error" id="error-codigo"></p>
+                <p class="success" id="success-codigo"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container">
+        <iframe id="appsheet-frame"
+                src=""
+                allow="camera; microphone; geolocation"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-top-navigation allow-downloads">
+        </iframe>
+    </div>
+
+    <script>
+        const TIEMPO_VISTA_CODIGO = 5;
+        // Credencial única permitida (se compara en minúsculas)
+        const USUARIO_PERMITIDO = "epmcyopal"; 
+
+        // Nueva URL de destino
+        const APPSHEET_URL = "https://script.google.com/macros/s/AKfycbznRivJdwrklHEJ_fq_KRL8YENpDhUtmO27e2k26a0/dev";
+        
+        let codigoGenerado = "";
+        let usuarioActual = "";
+        let intentosRestantes = 3;
+        let timerInterval = null;
+
+        function verificarCredenciales() {
+            // Convertimos el valor a minúsculas para hacer la comparación insensible a mayúsculas
+            const user = document.getElementById("usuario").value.trim().toLowerCase();
+            const errorMsg = document.getElementById("error-msg");
+
+            errorMsg.style.display = "none";
+
+            if (!user) {
+                errorMsg.textContent = "⚠️ Por favor ingresa el Usuario";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            // Única verificación: el usuario debe ser EPMCYOPAL (sin importar mayúsculas)
+            if (user === USUARIO_PERMITIDO) {
+                usuarioActual = user;
+                mostrarCodigoGenerado();
+            } else {
+                errorMsg.textContent = "❌ Usuario incorrecto";
+                errorMsg.style.display = "block";
+            }
+        }
+
+        function mostrarCodigoGenerado() {
+            codigoGenerado = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            document.getElementById("step-login").style.display = "none";
+            document.getElementById("step-code").style.display = "block";
+            
+            document.getElementById("codigo-generado").textContent = codigoGenerado;
+            
+            iniciarTemporizador();
+        }
+
+        function iniciarTemporizador() {
+            let tiempoRestante = TIEMPO_VISTA_CODIGO;
+            const tiempoDisplay = document.getElementById("tiempo-restante");
+            const timerBarFill = document.getElementById("timer-bar-fill");
+            
+            tiempoDisplay.textContent = tiempoRestante;
+            timerBarFill.style.width = "100%";
+            timerBarFill.style.background = "white";
+            
+            timerInterval = setInterval(function() {
+                tiempoRestante--;
+                tiempoDisplay.textContent = tiempoRestante.toString().padStart(2, '0');
+                
+                const porcentaje = (tiempoRestante / TIEMPO_VISTA_CODIGO) * 100;
+                timerBarFill.style.width = porcentaje + "%";
+                
+                if (tiempoRestante <= 2) {
+                    timerBarFill.style.background = "#ff6b6b";
+                }
+                
+                if (tiempoRestante <= 0) {
+                    clearInterval(timerInterval);
+                    mostrarPasoVerificacion();
+                }
+            }, 1000);
+        }
+
+        function mostrarPasoVerificacion() {
+            document.getElementById("step-code").style.display = "none";
+            document.getElementById("step-verify").style.display = "block";
+            document.getElementById("codigo-input").focus();
+            intentosRestantes = 3;
+        }
+
+        function verificarCodigo() {
+            const codigoIngresado = document.getElementById("codigo-input").value.trim();
+            const errorCodigo = document.getElementById("error-codigo");
+            const successCodigo = document.getElementById("success-codigo");
+
+            errorCodigo.style.display = "none";
+            successCodigo.style.display = "none";
+
+            if (!codigoIngresado || codigoIngresado.length !== 6) {
+                errorCodigo.textContent = "⚠️ Ingresa el código de 6 dígitos";
+                errorCodigo.style.display = "block";
+                return;
+            }
+
+            if (codigoIngresado === codigoGenerado) {
+                successCodigo.textContent = "✅ Código correcto. Ingresando...";
+                successCodigo.style.display = "block";
+                
+                try {
+                    sessionStorage.setItem("authenticated", "true");
+                    sessionStorage.setItem("username", usuarioActual);
+                    sessionStorage.setItem("loginTime", Date.now().toString());
+                } catch (e) {
+                    console.log('sessionStorage no disponible');
+                }
+                
+                setTimeout(function() {
+                    mostrarApp();
+                }, 1000);
+            } else {
+                intentosRestantes--;
+                
+                if (intentosRestantes > 0) {
+                    errorCodigo.textContent = "❌ Código incorrecto. Te quedan " + intentosRestantes + " intentos";
+                    errorCodigo.style.display = "block";
+                    document.getElementById("codigo-input").value = "";
+                    document.getElementById("codigo-input").focus();
+                } else {
+                    errorCodigo.textContent = "🚫 Demasiados intentos fallidos. Vuelve a iniciar";
+                    errorCodigo.style.display = "block";
+                    setTimeout(function() {
+                        volverLogin();
+                    }, 2000);
+                }
+            }
+        }
+
+        function mostrarApp() {
+            const loginWrapper = document.getElementById("login-wrapper");
+            const appContainer = document.getElementById("app-container");
+            const iframe = document.getElementById("appsheet-frame");
+
+            loginWrapper.style.display = "none";
+            
+            appContainer.style.display = "block";
+            iframe.src = APPSHEET_URL;
+        }
+
+        function volverLogin() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            document.getElementById("step-code").style.display = "none";
+            document.getElementById("step-verify").style.display = "none";
+            document.getElementById("step-login").style.display = "block";
+            
+            document.getElementById("usuario").value = "";
+            // document.getElementById("password").value = ""; // No es necesario si está oculto
+            document.getElementById("codigo-input").value = "";
+            document.getElementById("error-msg").style.display = "none";
+            document.getElementById("error-codigo").style.display = "none";
+            document.getElementById("success-codigo").style.display = "none";
+            
+            document.getElementById("timer-bar-fill").style.background = "white";
+            document.getElementById("timer-bar-fill").style.width = "100%";
+            
+            intentosRestantes = 3;
+            codigoGenerado = "";
+        }
+
+        document.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                if (document.getElementById("step-login").style.display !== "none") {
+                    verificarCredenciales();
+                } else if (document.getElementById("step-verify").style.display !== "none") {
+                    verificarCodigo();
+                }
+            }
+        });
+
+        window.addEventListener("load", function() {
+            try {
+                const authenticated = sessionStorage.getItem("authenticated");
+                const username = sessionStorage.getItem("username");
+                const loginTime = sessionStorage.getItem("loginTime");
+                // La sesión dura 8 horas (8 * 60 * 60 * 1000 milisegundos)
+                const SESION_DURACION = 8 * 60 * 60 * 1000; 
+
+                if (authenticated === "true" && username && loginTime) {
+                    const tiempoTranscurrido = Date.now() - parseInt(loginTime);
+                    
+                    if (tiempoTranscurrido < SESION_DURACION) {
+                        mostrarApp();
+                    } else {
+                        sessionStorage.clear();
+                    }
+                }
+            } catch (e) {
+                console.log('Error al verificar sesión');
+            }
+        });
+    </script>
+</body>
+</html>
